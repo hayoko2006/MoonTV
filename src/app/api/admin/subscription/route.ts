@@ -19,21 +19,16 @@ interface BaseBody {
 // Base58 解码函数（使用 BigInt，边缘运行时支持）
 function decodeBase58(str: string): string {
   const alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-  // @ts-expect-error BigInt is supported in edge runtime
   let num = 0n;
   for (const ch of str) {
     const index = alphabet.indexOf(ch);
     if (index === -1) throw new Error('Invalid Base58 character');
-    // @ts-expect-error BigInt is supported in edge runtime
     num = num * 58n + BigInt(index);
   }
   // 转换为字节数组
   const bytes: number[] = [];
-  // @ts-expect-error BigInt is supported in edge runtime
   while (num > 0n) {
-    // @ts-expect-error BigInt is supported in edge runtime
     bytes.unshift(Number(num & 0xffn));
-    // @ts-expect-error BigInt is supported in edge runtime
     num >>= 8n;
   }
   // 转换为 UTF-8 字符串

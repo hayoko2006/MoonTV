@@ -2,6 +2,7 @@
 
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import { Suspense } from 'react';
 
 import './globals.css';
 import 'sweetalert2/dist/sweetalert2.min.css';
@@ -118,33 +119,35 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <ServiceWorkerRegistration />
-          <NavigationLoadingProvider>
-            <SiteProvider siteName={siteName} announcement={announcement}>
-              <NavigationLoadingIndicator />
-              <UserOnlineUpdate />
-              
-              {/* 条件导航栏 - 根据路径自动判断是否显示 */}
-              <ConditionalNav />
-              
-              {/* 全局下载管理器 - 只渲染一次，被所有导航栏共享 */}
-              <GlobalDownloadManager />
-              
-              {/* 页面内容 */}
-              <div className='relative w-full'>
-                <main
-                  className='flex-1 mb-14 md:mb-0'
-                  style={{
-                    paddingBottom: 'calc(3.5rem + env(safe-area-inset-bottom))',
-                  }}
-                >
-                  {children}
-                </main>
-              </div>
-              
-              <GlobalErrorIndicator />
-              {autoUpdateEnabled && <SubscriptionAutoUpdate />}
-            </SiteProvider>
-          </NavigationLoadingProvider>
+          <Suspense fallback={null}>
+            <NavigationLoadingProvider>
+              <SiteProvider siteName={siteName} announcement={announcement}>
+                <NavigationLoadingIndicator />
+                <UserOnlineUpdate />
+
+                {/* 条件导航栏 - 根据路径自动判断是否显示 */}
+                <ConditionalNav />
+
+                {/* 全局下载管理器 - 只渲染一次，被所有导航栏共享 */}
+                <GlobalDownloadManager />
+
+                {/* 页面内容 */}
+                <div className='relative w-full'>
+                  <main
+                    className='flex-1 mb-14 md:mb-0'
+                    style={{
+                      paddingBottom: 'calc(3.5rem + env(safe-area-inset-bottom))',
+                    }}
+                  >
+                    {children}
+                  </main>
+                </div>
+
+                <GlobalErrorIndicator />
+                {autoUpdateEnabled && <SubscriptionAutoUpdate />}
+              </SiteProvider>
+            </NavigationLoadingProvider>
+          </Suspense>
         </ThemeProvider>
       </body>
     </html>

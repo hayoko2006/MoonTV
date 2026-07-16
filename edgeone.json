@@ -1,0 +1,50 @@
+{
+  "name": "moontv",
+  "buildCommand": "pnpm build",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "outputDirectory": ".next",
+  "nodeVersion": "22.11.0",
+  "headers": [
+    {
+      "source": "/fonts/*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/icons/*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/_next/static/*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "daily-cache-update",
+      "cron": "0 1 * * *",
+      "path": "/api/cron",
+      "method": "GET"
+    }
+  ],
+  "cloudFunctions": {
+    "mainlandRegions": ["ap-guangzhou"],
+    "nodejs": {
+      "maxDuration": 60
+    }
+  }
+}
